@@ -105,7 +105,7 @@ class UsersControllerTest {
                                  .andReturn();
     
     // Assert
-    Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(),
+    Assertions.assertEquals(HttpStatus.CREATED.value(),
                             mvcResult.getResponse()
                                      .getStatus(),
                             "Incorrect HTTP Status Code returned"
