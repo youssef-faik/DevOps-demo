@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +51,6 @@ public class UsersServiceImpl implements UsersService {
   
   @Override
   public List<UserDto> getUsers(int page, int limit) {
-    List<UserDto> returnValue = new ArrayList<>();
     
     if (page > 0) {
       page -= 1;
@@ -65,9 +63,8 @@ public class UsersServiceImpl implements UsersService {
     
     Type listType = new TypeToken<List<UserDto>>() {
     }.getType();
-    returnValue = new ModelMapper().map(users, listType);
     
-    return returnValue;
+    return new ModelMapper().map(users, listType);
   }
   
   @Override
