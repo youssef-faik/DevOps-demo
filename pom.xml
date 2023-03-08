@@ -15,6 +15,8 @@
   <description>devops-demo</description>
   <properties>
     <java.version>11</java.version>
+    <app.image.name>devops-demo</app.image.name>
+    <app.image.tag/>
   </properties>
   <dependencies>
     <dependency>
@@ -59,6 +61,7 @@
   </dependencies>
 
   <build>
+    <finalName>devops-demo</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -72,7 +75,79 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+      <groupId>com.google.cloud.tools</groupId>
+      <artifactId>jib-maven-plugin</artifactId>
+      <version>3.3.1</version>
+      <configuration>
+        <from>
+          <image>openjdk:11-jre-slim</image>
+        </from>
+        <container>
+          <ports>
+            <port>8080</port>
+          </ports>
+          <format>OCI</format>
+        </container>
+      </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+
+    <profile>
+      <id>jib-push-to-dockerhub</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>jib-maven-plugin</artifactId>
+            <version>3.3.1</version>
+            <configuration>
+              <from>
+                <image>openjdk:11-jre-slim</image>
+              </from>
+              <container>
+                <ports>
+                  <port>8080</port>
+                </ports>
+                <format>OCI</format>
+              </container>
+            </configuration>
+            <executions>
+              <execution>
+                <id>push-custom-tag</id>
+                <phase>package</phase>
+                <configuration>
+                  <to>
+                    <image>docker.io/faikyoussef/${app.image.name}:${app.image.tag}</image>
+                  </to>
+                </configuration>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>push-latest-tag</id>
+                <phase>package</phase>
+                <configuration>
+                  <to>
+                    <image>docker.io/faikyoussef/${app.image.name}:latest</image>
+                  </to>
+                </configuration>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
