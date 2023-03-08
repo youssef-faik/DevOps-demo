@@ -1,0 +1,6 @@
+services:
+  backend:
+    image: "faikyoussef/devops-demo:latest"
+    ports:
+      - "80:8080"
+    restart: "always"
