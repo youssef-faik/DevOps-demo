@@ -8,7 +8,7 @@ on:
 
 env:
   # Java
-  JAVA_VERSION: 1.11
+  JAVA_VERSION: 11
   # DockerHub
   DOCKER_HUB_USERNAME: faikyoussef
   # AWS & Elastic Bean Stalk
