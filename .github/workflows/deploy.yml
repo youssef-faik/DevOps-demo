@@ -51,6 +51,7 @@ jobs:
           ./mvnw --no-transfer-progress clean package \
             -P jib-push-to-dockerhub \
               -Dapp.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}}
+
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -58,6 +59,7 @@ jobs:
           text: ':white_check_mark: pushed faikyoussef/devops-demo:${{steps.build-number.outputs.BUILD_NUMBER}} to docker hub... https://hub.docker.com/repository/docker/faikyoussef/devops-demo'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Update and commit app version in docker-compose.yaml
         run: |
           BUILD_NUMBER=${{steps.build-number.outputs.BUILD_NUMBER}}
@@ -77,6 +79,7 @@ jobs:
           text: ':aws: Deployment started...'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@ebe3476a4ce991d54336935e75e78dd9d86f9408
         with:
@@ -89,6 +92,7 @@ jobs:
           version_label: ${{ steps.build-number.outputs.BUILD_NUMBER }}
           version_description: Version ${{steps.build-number.outputs.BUILD_NUMBER}} deployed via github actions ${{ github.sha }}
           wait_for_deployment: 60
+
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
