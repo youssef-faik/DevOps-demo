@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
   workflow_dispatch:
 
@@ -22,15 +22,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: 8398a7/action-slack@v3
+      - name: Send Slack Notification => CICD ongoing...
+        uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          text: 'CICD ongoing...'
+          text: 'CICD ongoing... :eyes:'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
@@ -53,7 +55,8 @@ jobs:
             -P jib-push-to-dockerhub \
               -Dapp.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}}
 
-      - uses: 8398a7/action-slack@v3
+      - name: Send Slack Notification => Push Docker Image to DockerHub
+        uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
@@ -73,11 +76,12 @@ jobs:
           git commit -m "new app version: ${BUILD_NUMBER}"
           git push
 
-      - uses: 8398a7/action-slack@v3
+      - name: Send Slack Notification => Deployment started...
+        uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          text: ':aws: Deployment started...'
+          text: ':elasticbeanstalk: :aws: Deployment started... :grimacing: '
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -94,11 +98,12 @@ jobs:
           version_description: Version ${{steps.build-number.outputs.BUILD_NUMBER}} deployed via github actions ${{ github.sha }}
           wait_for_deployment: 60
 
-      - uses: 8398a7/action-slack@v3
+      - name: Send Slack Notification => deployment succeeded
+        uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          text: ':tada: :arrow_right: http://devops-demo.us-east-1.elasticbeanstalk.com'
+          text: ':tada: Deployment succeeded :arrow_right: http://devops-demo.us-east-1.elasticbeanstalk.com'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
