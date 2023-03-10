@@ -42,7 +42,7 @@ jobs:
       - name: Super Linter
         uses: github/super-linter@v4
         env: 
-          VALIDATE ALL CODEBASE: false
-          DEFAULT BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.SUPER_LINTER_GITHUB_GITHUB_TOKEN }}
         
